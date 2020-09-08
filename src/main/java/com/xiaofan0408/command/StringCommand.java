@@ -1,5 +1,6 @@
 package com.xiaofan0408.command;
 
+import com.xiaofan0408.core.AbstractConnection;
 import com.xiaofan0408.core.RedisConnection;
 import com.xiaofan0408.message.ServerMessage;
 import com.xiaofan0408.message.impl.PingPacket;
@@ -8,9 +9,9 @@ import reactor.core.publisher.Flux;
 
 public class StringCommand {
 
-    private RedisConnection redisConnection;
+    private AbstractConnection redisConnection;
 
-    public StringCommand(RedisConnection redisConnection) {
+    public StringCommand(AbstractConnection redisConnection) {
         this.redisConnection = redisConnection;
     }
 

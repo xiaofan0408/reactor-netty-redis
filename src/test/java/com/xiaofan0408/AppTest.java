@@ -5,6 +5,7 @@ package com.xiaofan0408;
 import com.xiaofan0408.command.StringCommand;
 import com.xiaofan0408.core.RedisClient;
 import com.xiaofan0408.core.RedisConnection;
+import com.xiaofan0408.core.RedisConnection2;
 import com.xiaofan0408.message.impl.PingPacket;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
@@ -59,6 +60,17 @@ public class AppTest
             }
         });
         TimeUnit.MILLISECONDS.sleep(1000);
+    }
+
+    @Test
+    public void testConnection2() throws InterruptedException {
+        RedisConnection2 connect = redisClient.connect2();
+        StringCommand stringCommand = connect.getStringCommand();
+        stringCommand.ping().subscribe(System.out::println);
+        stringCommand.set("hello","world").subscribe(System.out::println);
+        stringCommand.get("hello").subscribe(System.out::println);
+        stringCommand.get("hello").subscribe(System.out::println);
+        TimeUnit.MILLISECONDS.sleep(200);
     }
 
 }

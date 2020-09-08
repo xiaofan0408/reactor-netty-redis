@@ -20,4 +20,8 @@ public class RedisClient {
         return new RedisConnection(tcpClient.connectNow());
     }
 
+    public RedisConnection2 connect2(){
+        return new RedisConnection2(tcpClient.connectNow());
+    }
+
 }
