@@ -9,6 +9,8 @@ import reactor.core.scheduler.Schedulers;
 
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * @author zefan.xzf
@@ -73,6 +75,21 @@ public class ClientTest {
             redisClient.randomKey().blockFirst();
         }
         System.out.println("cost: " + (System.currentTimeMillis() - startTime));
+    }
+
+    @Test
+    public void testMulti2() throws InterruptedException {
+        StringCommand stringCommand = redisClient.getStringCommandSync();
+        Stream.of(1,2,3,4,5).parallel().forEach(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) {
+                stringCommand.set("hello" + integer.intValue(),"world" +  + integer.intValue()).subscribe(System.out::println);
+                stringCommand.get("hello" + integer.intValue()).subscribe(serverMessage -> {
+                    System.out.println(integer +":" +serverMessage.getData().toString());
+                });
+            }
+        });
+        TimeUnit.MILLISECONDS.sleep(5000);
     }
 
 }
