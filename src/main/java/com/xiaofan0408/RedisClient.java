@@ -2,7 +2,6 @@ package com.xiaofan0408;
 
 import com.xiaofan0408.common.command.StringCommand;
 import com.xiaofan0408.common.core.AbstractConnection;
-import com.xiaofan0408.common.message.impl.ExistsPacket;
 import com.xiaofan0408.common.message.impl.PingPacket;
 import com.xiaofan0408.common.message.impl.StringPacket;
 import com.xiaofan0408.common.model.RedisArray;
@@ -11,8 +10,10 @@ import com.xiaofan0408.impl2.RedisConnectionExTwo;
 import org.apache.commons.lang3.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.netty.resources.ConnectionProvider;
 import reactor.netty.tcp.TcpClient;
 
+import java.time.Duration;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -42,6 +43,8 @@ public class RedisClient {
 
         private Class connectionClass;
 
+        private ConnectionProvider provider;
+
         public Builder setHost(String host) {
             this.host = host;
             return this;
@@ -57,7 +60,23 @@ public class RedisClient {
             return this;
         }
 
+        public Builder setPool(ConnectionProvider pool){
+            this.provider = pool;
+            return this;
+        }
+
         public RedisClient build() {
+            ConnectionProvider provider;
+            if (Objects.nonNull(this.provider)) {
+                provider = this.provider;
+            } else {
+                provider = ConnectionProvider.builder("redis-fixed")
+                                .maxConnections(20)
+                                .maxIdleTime(Duration.ofSeconds(20))
+                                .maxLifeTime(Duration.ofSeconds(60))
+                                .pendingAcquireTimeout(Duration.ofSeconds(60))
+                                .build();
+            }
             if (StringUtils.isBlank(host)) {
                 host = "127.0.0.1";
             }
@@ -65,7 +84,9 @@ public class RedisClient {
                 port = 6379;
             }
             RedisClient redisClient  = new RedisClient();
-            TcpClient tcpClient = TcpClient.create().host(host).port(port);
+            TcpClient tcpClient = TcpClient.create(provider).
+                    host(host)
+                    .port(port);
             redisClient.tcpClient = tcpClient;
             if (Objects.nonNull(connectionClass)) {
                 if (connectionClass.getName().equals(RedisConnectionExOne.class.getName())) {
@@ -92,7 +113,7 @@ public class RedisClient {
     }
 
     public Flux<Boolean> exists(String key) {
-        return connection.sendPacket(new ExistsPacket(key)).map(serverMessage -> {
+        return connection.sendPacket(new StringPacket("exists " + key)).map(serverMessage -> {
             return 1L == Long.parseLong(serverMessage.getData().toString());
         });
     }

@@ -1,7 +1,6 @@
 package com.xiaofan0408;
 
 import com.xiaofan0408.common.command.StringCommand;
-import com.xiaofan0408.impl1.RedisConnectionExOne;
 import com.xiaofan0408.impl2.RedisConnectionExTwo;
 import org.junit.Before;
 import org.junit.Test;
