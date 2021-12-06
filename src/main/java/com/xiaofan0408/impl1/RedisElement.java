@@ -1,4 +1,4 @@
-package com.xiaofan0408.impl1.core;
+package com.xiaofan0408.impl1;
 
 import com.xiaofan0408.common.message.ServerMessage;
 import reactor.core.publisher.FluxSink;

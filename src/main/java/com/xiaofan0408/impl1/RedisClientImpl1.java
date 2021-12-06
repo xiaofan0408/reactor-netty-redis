@@ -1,6 +1,5 @@
-package com.xiaofan0408.impl1.core;
+package com.xiaofan0408.impl1;
 
-import com.xiaofan0408.impl2.core.RedisConnection;
 import reactor.netty.tcp.TcpClient;
 
 public class RedisClientImpl1 {
@@ -17,8 +16,8 @@ public class RedisClientImpl1 {
         tcpClient = TcpClient.create().host(host).port(port);
     }
 
-    public com.xiaofan0408.impl1.core.RedisConnection connect(){
-        return new com.xiaofan0408.impl1.core.RedisConnection(tcpClient.connectNow());
+    public RedisConnectionExOne connect(){
+        return new RedisConnectionExOne(tcpClient.connectNow());
     }
 
 }

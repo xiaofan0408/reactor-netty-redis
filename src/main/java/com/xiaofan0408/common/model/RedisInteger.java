@@ -1,4 +1,4 @@
-package com.xiaofan0408.impl1.model;
+package com.xiaofan0408.common.model;
 
 
 

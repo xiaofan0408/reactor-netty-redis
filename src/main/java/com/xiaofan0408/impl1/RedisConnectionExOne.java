@@ -1,9 +1,9 @@
-package com.xiaofan0408.impl1.core;
+package com.xiaofan0408.impl1;
 
 
 import com.xiaofan0408.common.core.AbstractConnection;
-import com.xiaofan0408.impl1.codec.RedisPacketDecoder;
-import com.xiaofan0408.impl1.codec.RedisPacketEncoder;
+import com.xiaofan0408.common.codec.RedisPacketDecoder;
+import com.xiaofan0408.common.codec.RedisPacketEncoder;
 import com.xiaofan0408.common.command.StringCommand;
 import com.xiaofan0408.common.enu.RedisException;
 import com.xiaofan0408.common.message.ClientMessage;
@@ -22,9 +22,9 @@ import java.util.Queue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class RedisConnection implements AbstractConnection {
+public class RedisConnectionExOne implements AbstractConnection {
 
-    private static final Logger logger = Loggers.getLogger(RedisConnection.class);
+    private static final Logger logger = Loggers.getLogger(RedisConnectionExOne.class);
     protected final ReentrantLock lock = new ReentrantLock();
     protected final Connection connection;
     protected final Queue<RedisElement> responseReceivers = Queues.<RedisElement>unbounded().get();
@@ -35,7 +35,7 @@ public class RedisConnection implements AbstractConnection {
     private final RedisPacketEncoder redisPacketEncoder = new RedisPacketEncoder();
 
 
-    public RedisConnection(Connection connection) {
+    public RedisConnectionExOne(Connection connection) {
         this.connection = connection;
         this.redisPacketDecoder = new RedisPacketDecoder(responseReceivers, this);
         connection.addHandler(redisPacketDecoder);
@@ -43,7 +43,7 @@ public class RedisConnection implements AbstractConnection {
         if (logger.isTraceEnabled()) {
             connection.addHandlerFirst(
                     LoggingHandler.class.getSimpleName(),
-                    new LoggingHandler(RedisConnection.class, LogLevel.TRACE));
+                    new LoggingHandler(RedisConnectionExOne.class, LogLevel.TRACE));
         }
         connection
                 .inbound()

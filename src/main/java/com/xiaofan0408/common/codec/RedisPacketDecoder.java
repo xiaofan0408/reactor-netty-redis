@@ -1,8 +1,8 @@
-package com.xiaofan0408.impl1.codec;
+package com.xiaofan0408.common.codec;
 
 import com.xiaofan0408.common.core.AbstractConnection;
 import com.xiaofan0408.common.enu.RedisException;
-import com.xiaofan0408.impl1.core.RedisElement;
+import com.xiaofan0408.impl1.RedisElement;
 import com.xiaofan0408.common.message.ServerMessage;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

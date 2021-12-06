@@ -1,7 +1,7 @@
 package com.xiaofan0408.common.message;
 
 
-import com.xiaofan0408.impl1.model.RedisObject;
+import com.xiaofan0408.common.model.RedisObject;
 
 /**
  * @author xuzefan  2020/9/4 15:25

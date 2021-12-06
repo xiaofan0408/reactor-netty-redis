@@ -1,6 +1,6 @@
 package com.xiaofan0408.common.message;
 
-import com.xiaofan0408.impl1.codec.RedisCodec;
+import com.xiaofan0408.common.codec.RedisCodec;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 

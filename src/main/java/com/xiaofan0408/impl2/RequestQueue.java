@@ -1,4 +1,4 @@
-package com.xiaofan0408.impl2.core;
+package com.xiaofan0408.impl2;
 
 import reactor.util.annotation.Nullable;
 import reactor.util.concurrent.Queues;

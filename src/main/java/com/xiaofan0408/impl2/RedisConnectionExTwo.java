@@ -1,7 +1,7 @@
-package com.xiaofan0408.impl2.core;
+package com.xiaofan0408.impl2;
 
 import com.xiaofan0408.common.core.AbstractConnection;
-import com.xiaofan0408.impl1.codec.RedisCodec;
+import com.xiaofan0408.common.codec.RedisCodec;
 import com.xiaofan0408.common.command.StringCommand;
 import com.xiaofan0408.common.enu.RedisException;
 import com.xiaofan0408.common.message.ClientMessage;
@@ -23,9 +23,9 @@ import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
 
-public class RedisConnection implements AbstractConnection {
+public class RedisConnectionExTwo implements AbstractConnection {
 
-    private static final Logger logger = Loggers.getLogger(RedisConnection.class);
+    private static final Logger logger = Loggers.getLogger(RedisConnectionExTwo.class);
 
     private Connection connection;
 
@@ -42,13 +42,13 @@ public class RedisConnection implements AbstractConnection {
 
     private ByteBufAllocator alloc;
 
-    public RedisConnection(Connection connection) {
+    public RedisConnectionExTwo(Connection connection) {
         this.connection = connection;
         this.alloc = this.connection.outbound().alloc();
         if (logger.isTraceEnabled()) {
             connection.addHandlerFirst(
                     LoggingHandler.class.getSimpleName(),
-                    new LoggingHandler(com.xiaofan0408.impl1.core.RedisConnection.class, LogLevel.TRACE));
+                    new LoggingHandler(RedisConnectionExTwo.class, LogLevel.TRACE));
         }
         connection
                 .inbound()

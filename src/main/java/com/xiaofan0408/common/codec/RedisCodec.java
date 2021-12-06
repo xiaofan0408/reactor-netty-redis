@@ -1,9 +1,9 @@
-package com.xiaofan0408.impl1.codec;
+package com.xiaofan0408.common.codec;
 
 
 import com.xiaofan0408.common.message.RedisServerMessage;
 import com.xiaofan0408.common.message.ServerMessage;
-import com.xiaofan0408.impl1.model.RedisObject;
+import com.xiaofan0408.common.model.RedisObject;
 import io.netty.buffer.ByteBuf;
 
 import java.util.Arrays;

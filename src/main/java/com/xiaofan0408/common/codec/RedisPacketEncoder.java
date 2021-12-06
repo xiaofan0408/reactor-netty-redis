@@ -1,4 +1,4 @@
-package com.xiaofan0408.impl1.codec;
+package com.xiaofan0408.common.codec;
 
 
 import com.xiaofan0408.common.message.ClientMessage;

@@ -1,4 +1,4 @@
-package com.xiaofan0408.impl1.model;
+package com.xiaofan0408.common.model;
 
 
 
@@ -11,6 +11,11 @@ public class RedisArray implements RedisObject {
 
     public RedisArray(List<RedisObject> elements) {
         this.elements = elements;
+    }
+
+
+    public List<RedisObject> getElements() {
+        return elements;
     }
 
     @Override
