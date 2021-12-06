@@ -1,9 +1,12 @@
 package com.xiaofan0408;
 
 import com.xiaofan0408.common.command.StringCommand;
+import com.xiaofan0408.impl1.RedisConnectionExOne;
 import com.xiaofan0408.impl2.RedisConnectionExTwo;
 import org.junit.Before;
 import org.junit.Test;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -54,6 +57,23 @@ public class ClientTest {
     public void testKeys() {
         Set<String> set =  redisClient.keys("rec_bou*").blockFirst();
         System.out.println(set);
+    }
+
+    @Test
+    public void testRandKey() {
+        String key = redisClient.randomKey().blockFirst();
+        System.out.println(key);
+    }
+
+
+    @Test
+    public void testMore(){
+
+        long startTime = System.currentTimeMillis();
+        for (int i=0; i<10000;i++) {
+            redisClient.randomKey().blockFirst();
+        }
+        System.out.println("cost: " + (System.currentTimeMillis() - startTime));
     }
 
 }

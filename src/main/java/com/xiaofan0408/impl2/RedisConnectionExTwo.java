@@ -98,7 +98,7 @@ public class RedisConnectionExTwo implements AbstractConnection {
     }
 
     @Override
-    public Flux<ServerMessage> sendPacket(ClientMessage request) {
+    public Flux<ServerMessage> doSend(ClientMessage request) {
         requireNonNull(request, "request must not be null");
         return Mono.<Flux<ServerMessage>>create(sink -> {
             if (!isConnected()) {

@@ -85,7 +85,7 @@ public class RedisConnectionExOne implements AbstractConnection {
     }
 
     @Override
-    public Flux<ServerMessage> sendPacket(ClientMessage message) {
+    public Flux<ServerMessage> doSend(ClientMessage message) {
         AtomicBoolean atomicBoolean = new AtomicBoolean();
         return Flux.create(
             sink -> {

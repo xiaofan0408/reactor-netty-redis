@@ -38,7 +38,7 @@ abstract class ActiveStatus extends LeftPadding {
  */
 final class RequestQueue extends ActiveStatus implements Runnable {
 
-    private final Queue<RequestTask<?>> queue = Queues.<RequestTask<?>>small().get();
+    private final Queue<RequestTask<?>> queue = Queues.<RequestTask<?>>unbounded().get();
 
     @Nullable
     private volatile RuntimeException disposed;

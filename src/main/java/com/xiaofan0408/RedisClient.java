@@ -68,7 +68,7 @@ public class RedisClient {
             TcpClient tcpClient = TcpClient.create().host(host).port(port);
             redisClient.tcpClient = tcpClient;
             if (Objects.nonNull(connectionClass)) {
-                if (connectionClass.getName().equals(RedisConnectionExOne.class)) {
+                if (connectionClass.getName().equals(RedisConnectionExOne.class.getName())) {
                     redisClient.connection = new RedisConnectionExOne(tcpClient.connectNow());
                 } else {
                     redisClient.connection = new RedisConnectionExTwo(tcpClient.connectNow());
@@ -123,6 +123,12 @@ public class RedisClient {
                     }
                     return set;
                 });
+    }
+
+
+    public Flux<String> randomKey() {
+        return connection.sendPacket(new StringPacket("randomKey"))
+                .map(serverMessage -> serverMessage.getData().toString());
     }
 
     public Mono<StringCommand> getStringCommand(){
