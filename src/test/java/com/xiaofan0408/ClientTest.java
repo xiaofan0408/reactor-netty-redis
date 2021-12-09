@@ -27,6 +27,7 @@ public class ClientTest {
                 .setHost("127.0.0.1")
                 .setPort(6779)
                 .setConnection(RedisConnectionExTwo.class)
+                .setPoolSize(20)
                 .build();
     }
 

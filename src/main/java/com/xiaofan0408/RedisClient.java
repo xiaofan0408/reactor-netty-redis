@@ -2,6 +2,7 @@ package com.xiaofan0408;
 
 import com.xiaofan0408.common.command.StringCommand;
 import com.xiaofan0408.common.core.AbstractConnection;
+import com.xiaofan0408.common.core.Pool;
 import com.xiaofan0408.common.message.impl.PingPacket;
 import com.xiaofan0408.common.message.impl.StringPacket;
 import com.xiaofan0408.common.model.RedisArray;
@@ -28,6 +29,8 @@ public class RedisClient {
 
     private TcpClient tcpClient;
 
+    private Pool<AbstractConnection> connectionPool;
+
     private RedisClient() {
     }
 
@@ -45,6 +48,8 @@ public class RedisClient {
 
         private ConnectionProvider provider;
 
+        private int poolSize = 0;
+
         public Builder setHost(String host) {
             this.host = host;
             return this;
@@ -60,30 +65,29 @@ public class RedisClient {
             return this;
         }
 
-        public Builder setPool(ConnectionProvider pool){
-            this.provider = pool;
+        public Builder setPoolSize(int size) {
+            this.poolSize = size;
             return this;
         }
 
         public RedisClient build() {
-            ConnectionProvider provider;
-            if (Objects.nonNull(this.provider)) {
-                provider = this.provider;
-            } else {
-                provider = ConnectionProvider.builder("redis-fixed")
-                                .maxConnections(20)
-                                .maxIdleTime(Duration.ofSeconds(20))
-                                .maxLifeTime(Duration.ofSeconds(60))
-                                .pendingAcquireTimeout(Duration.ofSeconds(60))
-                                .build();
+
+            if (poolSize > 0) {
+                this.provider = ConnectionProvider.builder("redis-fixed")
+                        .maxConnections(poolSize)
+                        .maxIdleTime(Duration.ofSeconds(20))
+                        .maxLifeTime(Duration.ofSeconds(60))
+                        .pendingAcquireTimeout(Duration.ofSeconds(60))
+                        .build();
             }
+            RedisClient redisClient  = new RedisClient();
             if (StringUtils.isBlank(host)) {
                 host = "127.0.0.1";
             }
             if (Objects.isNull(port)) {
                 port = 6379;
             }
-            RedisClient redisClient  = new RedisClient();
+
             TcpClient tcpClient = TcpClient.create(provider).
                     host(host)
                     .port(port);
@@ -97,6 +101,24 @@ public class RedisClient {
             } else {
                 redisClient.connection = new RedisConnectionExTwo(tcpClient.connectNow());
             }
+
+
+            if (poolSize > 0) {
+                redisClient.connectionPool = new Pool<>(poolSize,() -> {
+                    AbstractConnection connection;
+                    if (Objects.nonNull(connectionClass)) {
+                        if (connectionClass.getName().equals(RedisConnectionExOne.class.getName())) {
+                            connection = new RedisConnectionExOne(tcpClient.connectNow());
+                        } else {
+                            connection = new RedisConnectionExTwo(tcpClient.connectNow());
+                        }
+                    } else {
+                        connection = new RedisConnectionExTwo(tcpClient.connectNow());
+                    }
+                    return connection;
+                });
+            }
+
             return redisClient;
         }
     }
