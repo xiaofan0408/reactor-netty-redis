@@ -131,7 +131,19 @@ public class RedisClient {
     }
 
     public Flux<String> ping() {
-        return connection.sendPacket(new PingPacket()).map(serverMessage -> serverMessage.getData().toString());
+        AbstractConnection localConn = null;
+        try {
+            if (Objects.nonNull(connectionPool)) {
+                localConn = connectionPool.acquire();
+            } else {
+                localConn = connection;
+            }
+            return localConn.sendPacket(new PingPacket()).map(serverMessage -> serverMessage.getData().toString());
+        } finally {
+            if (Objects.nonNull(connectionPool)) {
+                connectionPool.release(localConn);
+            }
+        }
     }
 
     public Flux<Boolean> exists(String key) {
@@ -170,8 +182,20 @@ public class RedisClient {
 
 
     public Flux<String> randomKey() {
-        return connection.sendPacket(new StringPacket("randomKey"))
-                .map(serverMessage -> serverMessage.getData().toString());
+        AbstractConnection localConn = null;
+        try {
+            if (Objects.nonNull(connectionPool)) {
+                localConn = connectionPool.acquire();
+            } else {
+                localConn = connection;
+            }
+            return connection.sendPacket(new StringPacket("randomKey"))
+                    .map(serverMessage -> serverMessage.getData().toString());
+        } finally {
+            if (Objects.nonNull(connectionPool)) {
+                connectionPool.release(localConn);
+            }
+        }
     }
 
     public Mono<StringCommand> getStringCommand(){

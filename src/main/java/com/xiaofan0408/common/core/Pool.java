@@ -25,16 +25,22 @@ public class Pool<T> {
     }
 
 
-    public T acquire() throws InterruptedException {
-        semaphore.acquire();
-        T data = objects.pop();
-        if (Objects.isNull(data)) {
-            return generator.get();
-        }
-        return data;
+    public T acquire()  {
+        try {
+            semaphore.acquire();
+            if (objects.isEmpty()) {
+                return generator.get();
+            }
+            T data = objects.pop();
+            return data;
+        }catch (Exception e){}
+        return null;
     }
 
     public void release(T data) {
+        if (data == null) {
+            return;
+        }
         objects.push(data);
         semaphore.release();
     }
